@@ -1,0 +1,8 @@
+[
+	{"name":"John McClane","nick":"yippeekiyay","avatar":"images/jaxm2mrc1k4zwn5y.jpg","latitude":40.4211134,"longitude":-3.7046639999999798,"email":"ikilled@hansgruber.com","id":1, "password": "johnmcclane"},
+	{"name":"Hank Moody","nick":"godhatesusall","avatar":"images/vuvp3t7rhk26byad.jpg","latitude":40.43938,"longitude":-3.714550000000031,"email":"ilove@runkle.com","id":2, "password": "hankmoody"},
+	{"name":"Arya Stark","nick":"stickthemwiththepointyend","avatar":"images/qkmrrsm4dc9gev2z.jpg","latitude":40.4984144,"longitude":-3.6879922000000533,"email":"not@today.com","id":3, "password": "aryastark"},
+	{"name":"Jackson Teller","nick":"samcropresident","avatar":"images/ghe2fvcoo9esptbe.jpg","latitude":40.4214232,"longitude":-3.6123024999999416,"email":"jesus@christ.com","id":4, "password": "jacksonteller"},
+	{"name":"Beatrix Kiddo","nick":"pussywagon","avatar":"images/7pqa7tkcp54rupte.jpg","latitude":40.4006009,"longitude":-3.745363300000008,"email":"paimei@rulez.com","id":5, "password": "beatrixkiddo"},
+	{"name":"Katniss Everdeen","nick":"ivolunteer","avatar":"images/v7hkfs7z42qmk2m8.jpg","latitude":40.4500596,"longitude":-3.6682499999999436,"email":"maytheoddsbeever@inyourfavor.com","id":6, "password": "katnisseverdeen"}
+]

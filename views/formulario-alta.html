@@ -1,0 +1,30 @@
+<div>
+
+    <!-- Nombre de la receta -->
+    <label for="nombre-receta">
+        Nombre de la receta
+    </label>
+    <input
+        id="nombre-receta"
+        type="text"
+        placeholder="Pe. Solomillo a la pimienta"
+        class="u-full-width"
+        ng-model="receta.nombre"
+        required>
+
+    <!-- Colección de ingredientes -->
+    <ingredientes
+        coleccion="receta.ingredientes"
+        nuevo-ingrediente="agregarIngrediente(ingrediente)"
+        ingrediente-eliminado="eliminarIngrediente(indice)">
+    </ingredientes>
+
+    <!-- Botón para guardar receta -->
+    <button
+        ng-click="notificarTexto()"
+        ng-disabled="!puedoGuardar()"
+        class="u-full-width button-primary">
+        Aceptar
+    </button>
+
+</div>

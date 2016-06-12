@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Con 'base' indicamos la ruta base a partir
+    de la cual se contruye el Single Page Application -->
+    <base href="/">
+    <meta charset="UTF-8">
+    <title>Cookbook - Recetas de cocina</title>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="node_modules/skeleton-css/css/normalize.css">
+    <link rel="stylesheet" href="node_modules/skeleton-css/css/skeleton.css">
+    <link rel="stylesheet" href="styles/cookbook.css">
+
+    <!-- AngularJS -->
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/@angular/router/angular1/angular_1_router.js"></script>
+    <script src="node_modules/ng-image-picker/ng-image-picker.js"></script>
+    <script src="./node_modules/ng-haversine/ng-haversine.min.js"></script>
+    <!-- Documento de configuración del módulo -->
+    <script src="scripts/app.js"></script>
+    <!-- Componentes -->
+    <script src="scripts/components/detail-product.js"></script>
+    <script src="scripts/components/ingredientes.js"></script>
+    <script src="scripts/components/my-products.js"></script>
+    <script src="scripts/components/new-product.js"></script>
+    <script src="scripts/components/raiz.js"></script>
+    <!-- Filtros -->
+    <script src="scripts/filters/resumen-ingredientes.js"></script>
+    <script src="scripts/filters/date-convert.js"></script>
+    <!-- Servicios -->
+    <script src="scripts/services/service-products.js"></script>
+    <!-- Directivas -->
+    <!-- <script src="scripts/directives/formulario-alta.js"></script>-->
+    <!-- Values -->
+    <script src="scripts/values/properties.js"></script>
+</head>
+<!-- Hacemos el bootstrapping del módulo -->
+<body ng-app="whatapop">
+<!-- Componente raíz -->
+<raiz></raiz>
+</body>
+</html>

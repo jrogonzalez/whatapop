@@ -1,0 +1,33 @@
+<!-- Nombre del nuevo ingrediente -->
+<label for="ingredientes">Ingredientes</label>
+<input
+    id="ingredientes"
+    type="text"
+    class="u-full-width"
+    placeholder="Pe. Tomate"
+    ng-model="$ctrl.ingrediente.nombre"
+    ng-keyup="$ctrl.teclaPulsada($event)">
+
+<!-- Colección de ingredientes -->
+<!-- Con la directiva ngShow mostramos un elemento del DOM cuando
+ la expresión que indiquemos resuelva como 'true' -->
+<table class="u-full-width" ng-show="$ctrl.coleccion.length > 0">
+    <thead>
+        <tr>
+            <th>Ingrediente</th>
+            <th colspan="2">Cantidad (gr)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="ingrediente in $ctrl.coleccion">
+            <td>{{ ingrediente.nombre }}</td>
+            <td>
+                <input type="number" min="1" max="9999" ng-model="ingrediente.cantidad">
+            </td>
+            <td>
+                <!-- Con '$index' tenemos una referencia al índice que se está iterando -->
+                <button ng-click="$ctrl.eliminar($index)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

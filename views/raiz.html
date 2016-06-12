@@ -1,0 +1,33 @@
+<div class="container">
+
+    <!-- Cabecera de la aplicación -->
+    <div class="row">
+        <div class="twelve columns">
+            <header>
+                <h1>Mi Libro de Recetas</h1>
+            </header>
+        </div>
+    </div>
+
+    <!-- Barra de navegación -->
+    <div class="row">
+        <div class="twelve columns">
+            <nav class="barra-navegacion">
+                <ul>
+                    <li>
+                        <!-- Con 'ngLink' establecemos el nombre de ruta a navegar -->
+                        <a ng-link="['MyProducts']">Mis Recetas</a>
+                    </li>
+                    <li>
+                        <!-- Con 'ngLink' establecemos el nombre de ruta a navegar -->
+                        <a ng-link="['NewProduct']">Nueva Receta</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Zona dinámica -->
+    <ng-outlet></ng-outlet>
+
+</div>

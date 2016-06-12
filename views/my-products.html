@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="twelve columns">
+
+        <!-- Filtro de recetas -->
+        <label for="filtro-recetas">Busca una receta por su nombre</label>
+        <input
+            id="filtro-recetas"
+            type="text"
+            placeholder="Pe. Tortilla"
+            ng-model="$ctrl.filtroRecetas.name">
+
+        <!-- Lista de recetas -->
+        <table class="u-full-width">
+            <tbody>
+                <tr ng-repeat="product in $ctrl.productList | filter:$ctrl.filtroRecetas | orderBy:'name'">
+                <!-- <tr ng-repeat="receta in $ctrl.recetas"> -->
+                    <td>
+                        <img
+                            ng-src="{{ $ctrl.obtenerRutaImagen(product.photo) }}"
+                            width="60"
+                            height="60">
+                    </td>
+                    <td>
+                        <!-- Podemos utilizar este ngClick para mostrar u ocultar
+                             los datos de los ingredientes -->
+                        <!-- ng-click="receta.mostrar = !receta.mostrar" -->
+                        <div>{{ product.name }}</div>
+
+                        <div>{{ product.price }}</div>
+
+
+                        <a ng-link="['DetailProduct', { id: product.id }]">Ver detalle</a>`
+                        <!-- Este ngShow debe ir complementando al ngClick de más arriba -->
+                        <!-- ng-show="receta.mostrar" -->
+                        <div>
+                            <small>
+                                {{ product.ingredientes | ResumenIngredientes }}
+                            </small>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
