@@ -11,7 +11,7 @@ var categorySchema = mongoose.Schema({
     name: String
 });
 
-var Category = mongoose.model('Category', categorySchema);
+var Pepe = mongoose.model('Pepe', categorySchema);
 
 var operationsCategory = function() {
     return {
@@ -19,18 +19,18 @@ var operationsCategory = function() {
             let id = req.body.id;
             let name = req.body.name;
 
-            let category = new Category({
+            let pepe = new Pepe({
                 id: id,
                 name: name
             });
 
-            var errors = category.validateSync(); //Este metodo es sincrono
+            var errors = pepe.validateSync(); //Este metodo es sincrono
             if (errors) {
                 return Error('err006', req, res, 400);
 
             }
 
-            category.save(function(err) {
+            pepe.save(function(err) {
                 if (err) {
                     return Error('err007', req, res, 400);
 
@@ -48,22 +48,25 @@ var operationsCategory = function() {
                 return Error('err020', req, res, 500);
             }
 
-            Category.remove({'name': name}).exec(function(err, result) {
+            Pepe.remove({'name': name}).exec(function(err, result) {
                 if (err) {
                     return Error('err002', req, res, 400);
                 } else {
-                    return res.json({success: true, message: 'PushToken removed in bbdd'});
+                    return res.json({success: true, message: 'Category removed in bbdd'});
                 }
             });
         },
         searchCategory: function (req, res) {
             let name = req.query.name;
 
+            
+
             if (typeof name == "undefined"){
                 return Error('err020', req, res, 500);
             }
 
-            Category.findOne({name: name}).exec(function (err, result) {
+
+            Pepe.findOne({'name': name}).exec(function (err, result) {
                 if (err){
                     return Error('err002', req, res, 500);
                 }

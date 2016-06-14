@@ -18,7 +18,8 @@ router.delete('/removeCategory', jwtAuth(),function(req, res, next) {
     Categories.removeCategory(req, res, next);
 });
 
-router.get('/searchCategory', jwtAuth(),function(req, res, next) {
+router.get('/searchCategory' ,function(req, res, next) {
+    console.log("ha entrado");
     Categories.searchCategory(req, res, next);
 });
 

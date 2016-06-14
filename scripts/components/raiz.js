@@ -16,6 +16,7 @@ angular
              name: "DetailProduct",
              path: "/producto/id",
              component: "detailProduct"
-        }],
+        }
+        ],
         templateUrl: "views/raiz.html"
     });

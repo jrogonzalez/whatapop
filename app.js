@@ -15,10 +15,11 @@ app.use((req, res, next) => {
 });
 
 // Models
+
 require('./models/User');
-//require('./models/Category');
 require('./models/Product');
 require('./models/Error');
+require('./models/Category');
 
 // Make a require for database connection
 require('./lib/connectMongoose');

@@ -34,7 +34,7 @@ var productSchema = mongoose.Schema({
 
 // Hacer método estático
 productSchema.statics.list = function(filter, start, limit, sort, cb) {
-    var query = Advertisement.find(filter);
+    var query = Product.find(filter);
     query.skip(start);
     query.limit(limit);
     query.sort(sort);
@@ -49,9 +49,12 @@ var productOperations = function() {
             let id = req.query.id;
             let name = req.query.name;
             let description = req.description;
-            let category = req.query.category;
+            let cat1 = req.query.cat1;
+            let cat2 = req.query.cat2;
+            let cat3 = req.query.cat3;
             let seller = req.query.seller;
-            let published_date = req.query.published_date;
+            let dist = req.query.dist;
+            let date = req.query.date;
             let state = req.query.state;
 
             // NORMA: no se suele usar las variables directamente de lo que llega del metodo sino que se pasan a variables y se usan desde ahi
@@ -59,7 +62,8 @@ var productOperations = function() {
             var start = parseInt(req.query.start) || 0; //esto quiere decir que si no me pasan parametro start empiezo desde la 0. Esto es pa paginacion
             var limit = parseInt(req.query.limit) || null;
             var sort = req.query.sort || null;
-            var price = req.query.price || null;
+            var minprice = req.query.minprice || null;
+            var maxprice = req.query.maxprice || null;
             var includeTotal = req.query.includeTotal || 'true';
 
             if (typeof id !== 'undefined'){
@@ -70,49 +74,87 @@ var productOperations = function() {
                 console.log('entra name');
                 criteria.name = new RegExp('^' + name, 'i');
             }
-            if (typeof description !== 'undefined'){
+            if (typeof description !== 'undefined') {
                 console.log('entra description');
                 criteria.description = new RegExp('^' + description, 'i');
             }
-            if (typeof category !== 'undefined'){
-                console.log('entra category');
-                criteria.category = category;
-            }
-            if (typeof published_date !== 'undefined'){
-                console.log('entra published_date');
-                criteria.published_date = published_date;
-            }
+           
             if (typeof seller !== 'undefined'){
                 console.log('entra seller');
                 criteria.seller = seller;
             }
-            if (typeof state !== 'undefined'){
-                console.log('entra state');
-                criteria.state = state;
+
+            // Añadimos siempre el estado de vendiendose y no sacamos los que ya han sido vendidos
+            console.log('entra state');
+            criteria.state = 'selling';
+
+
+            if ((typeof minprice !== 'undefined' && minprice !== null) && (typeof maxprice !== 'undefined' && maxprice !== null)){
+                console.log("entra por ambos");
+                criteria.price = { '$gte': minprice, '$lte': maxprice };
+            }
+            else if (typeof minprice !== 'undefined' && minprice !== null){
+                console.log("entra por el minprice");
+                criteria.price = { '$gte': minprice };
+            }
+            else if (typeof maxprice !== 'undefined' && maxprice !== null){
+                console.log("entra por el maxprice");
+
+                criteria.price = { '$lte': maxprice };
             }
 
-            if ((typeof price !== 'undefined')){
+            let searchDate =  new Date();
+            console.log("fechaActual", searchDate);
 
-                var priceNumber = '0';
+            if (typeof date !== 'undefined' && date !== null && date === '1'){
+                console.log('entra searchDate1');
+                console.log(sumarDias(searchDate, -1));
+                criteria.published_date = { '$gte': searchDate.getTime() };
+                console.log(searchDate.getTime());
+            }
+            else if (typeof date !== 'undefined' && date !== null && date === '2'){
+                console.log('entra searchDate2');
+                console.log(sumarDias(searchDate, -7));
+                criteria.published_date = { '$gte': searchDate.getTime() };
+                console.log(searchDate.getTime());
+            }
+            else if (typeof date !== 'undefined' && date !== null && date === '3'){
+                console.log('entra searchDate3');
+                console.log(sumarDias(searchDate, -30));
+                criteria.published_date = { '$gte': searchDate.getTime() };
+                console.log(searchDate.getTime());
+            }
+            else if (typeof date !== 'undefined' && date !== null && date === '4'){
+                console.log('entra category4');
 
-                // 10- buscará los que tengan precio mayor que 10
-                if (regex_gte.test(price)){
-                    priceNumber = price.substring(0,price.length-1);
-                    criteria.price = { '$gte': priceNumber };
-                }
-                else if (regex_lte.test(price)){    // ­50 buscará los que tengan precio menor de 50
-                    priceNumber = price.substr(1);
-                    criteria.price = { '$lte': priceNumber };
-                }else if (regex_gte_lte.test(price)){ // 10­50 buscará anuncios con precio incluido entre estos valores
-                    var posicion = price.indexOf('-');
-                    priceNumber = price.substr(0,posicion);
-                    var priceNumber2 = price.substr(posicion+1);
-                    criteria.price = { '$gte': priceNumber, '$lte': priceNumber2 };
-                }else if (price !== null){ // 50 buscará los que tengan precio igual a 50
-                    criteria.price = { '$lte': price};
-                }else{ // buscamos por defecto los mayores que 0
-                    criteria.price = { '$gte': priceNumber };
-                }
+            }
+
+            /*if (typeof published_date !== 'undefined'){
+                console.log('entra published_date');
+                criteria.published_date = published_date;
+            }
+            */
+            
+            
+            
+
+            var category = [];
+            var cri = "";
+            if (typeof cat1 !== 'undefined' && cat1 !== null){
+                console.log('entra category2');
+                category.push(cat1);
+            }
+            else if (typeof cat2 !== 'undefined' && cat2 !== null){
+                console.log('entra category2');
+                category.push(cat2);
+            }
+            else if (typeof cat3 !== 'undefined' && cat3 !== null){
+                console.log('entra category3');
+                category.push(cat3);
+            }
+            if (category.length > 0){
+                criteria.category.name = category
+                console.log("creiteria, cat: ", criteria.category)
             }
 
             Product.list(criteria, start, limit, sort, function(err, rows) {
@@ -204,6 +246,15 @@ var productOperations = function() {
         */
     };
 };
+
+
+/* Función que suma o resta días a una fecha, si el parámetro
+ días es negativo restará los días*/
+function sumarDias(fecha, dias){
+    fecha.setDate(fecha.getDate() + dias);
+    return fecha;
+}
+
 
 var operations = productOperations();
 

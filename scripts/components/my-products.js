@@ -27,6 +27,25 @@ angular
                 });
             };
 
+            // Guardamos la receta.
+            self.buscarProductos = function(datos) {
+
+                console.log("log buscar productos");
+                ServiceProducts
+                    .buscarProductos(datos)
+                    .then(function(resultado) {
+
+                        console.log("resultado: ", resultado.data);
+
+                        self.coleccion = resultado;
+
+                        // $router tiene los datos relacionados con la ruta
+                        // que se está navegando. Puedo ejecutar su función
+                        // 'navigate()' para hacer una redirección.
+                        //self.$router.navigate(["MisRecetas"]);
+                    });
+            };
+
             // Obtenemos la ruta absoluta de la imagen.
             self.obtenerRutaImagen = ServiceProducts.obtenerRutaImagenAbsoluta;
         }

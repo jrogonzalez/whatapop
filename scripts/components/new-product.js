@@ -33,6 +33,21 @@ angular
                     });
             };
 
+            // Guardamos la receta.
+            self.buscarProductos = function(datos) {
+
+                console.log(datos);
+                ServiceProducts
+                    .buscarProductos(datos, imagenReceta)
+                    .then(function() {
+
+                        // $router tiene los datos relacionados con la ruta
+                        // que se está navegando. Puedo ejecutar su función
+                        // 'navigate()' para hacer una redirección.
+                        //self.$router.navigate(["MisRecetas"]);
+                    });
+            };
+
             // Guardamos el documento de imagen indicado para
             // almacenarlo en el servidor junto con la receta.
             self.seleccionarImagen = function(imagen) {

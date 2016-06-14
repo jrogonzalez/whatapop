@@ -1,14 +1,14 @@
         
 angular
     .module("whatapop")
-    .component("ingredientes", {
+    .component("searchProduct", {
         bindings: {
             coleccion: "<",
             nuevoIngrediente: "&",
             ingredienteEliminado: "&"
         },
-        templateUrl: "views/ingredientes.html",
-        controller: function() {
+        templateUrl: "views/search-product.html",
+        controller: function(ServiceProducts) {
             
             var self = this;
             
@@ -21,7 +21,24 @@ angular
                     cantidad: 1
                 };
             };
-            
+
+            // Guardamos la receta.
+            self.buscarProductos = function(datos) {
+
+                console.log("entrando al buscarProductos");
+                ServiceProducts
+                    .buscarProductos(datos, imagenReceta)
+                    .then(function(resultado) {
+
+                        self.coleccion = resultado;
+
+                        // $router tiene los datos relacionados con la ruta
+                        // que se está navegando. Puedo ejecutar su función
+                        // 'navigate()' para hacer una redirección.
+                        //self.$router.navigate(["MisRecetas"]);
+                    });
+            };
+
             // Con cada tecla pulsada en la caja de nuevo ingrediente.
             self.teclaPulsada = function(evento) {
                 

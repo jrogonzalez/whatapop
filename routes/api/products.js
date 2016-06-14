@@ -12,7 +12,7 @@ var jwtAuth = require('../../lib/jwtAuth');
 
 // Apply de Authentication only for middleware we need
 
-router.get('/searchProduct', jwtAuth(), function(req, res, next) {
+router.get('/searchProduct', function(req, res, next) {
     Product.searchProduct(req, res, next);
 });
 

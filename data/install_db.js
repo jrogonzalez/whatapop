@@ -23,7 +23,7 @@ require('../models/Category');
 
 var Product = mongoose.model('Product');
 var User = mongoose.model('User');
-var Category = mongoose.model('Category');
+var Pepe = mongoose.model('Pepe');
 
 var sha256 = require('sha256');
 
@@ -118,9 +118,9 @@ function initProducts(cb){
                     user = data2[i].seller;
                     product.seller = user;
 
-                    var category = new Category();
-                    category = data2[i].category;
-                    product.category = category;
+                    var pepe = new Pepe();
+                    pepe = data2[i].category;
+                    product.category = pepe;
 
                     var errors = product.validateSync(); //This method is Sync
                     if (errors) {
@@ -177,6 +177,7 @@ function initUsers(cb){
 
                 var dataU = JSON.parse(dataUser);
 
+
                 for (var i = 0; i < dataU.length; i++) {
 
                     var user = new User();
@@ -214,6 +215,7 @@ function initUsers(cb){
 function initCategories(cb){
 
     var file = path.join(__dirname, 'categories.json');
+    console.log(file);
 
     console.log('\n *STARTING CATEGORIES* ');
 
@@ -224,35 +226,43 @@ function initCategories(cb){
     // The file *does* exist
     else {
 
-        // Drop the 'Category' collection from the current database
-        Category.remove({}, ()=> {
+        // Drop the 'Pepe' collection from the current database
+        Pepe.remove({} , ()=> {
             fs.readFile(file, 'utf-8', function (err, dataUser) {
                 if (err) {
                     return console.log('Categories can not be created', err);
                 }
 
+
                 var dataU = JSON.parse(dataUser);
 
-                for (var i = 0; i < dataU.length; i++) {
-                    var category = new Category();
-                    category.id = dataU[i].id;
-                    category.name = dataU[i].name;
 
-                    var errors = category.validateSync(); //This method is Sync
+                for (var i = 0; i < dataU.length; i++) {
+                    var pepe = new Pepe();
+                    pepe.id = dataU[i].id;
+                    pepe.name = dataU[i].name;
+
+                    var errors = pepe.validateSync(); //This method is Sync
                     if (errors) {
                         console.log(errors);
                         return console.log('Errors in Category Model Validation', err);
                     }
 
-                    category.save(function (err) {
+                    console.log(pepe);
+                    pepe.save( function(err) {
+
                         if (err) {
-                            return console.log('Category load error: ' + category.name + ' can not be created:' + err);
+                            console.log("traza2");
+                            return cb(err);
+                            //return console.log('Category load error: ' + category.name + ' can not be created:' + err);
                         }
+                        console.log("traza1");
                     });
                 }
                 console.log('\n *FINISHED CATEGORIES* ');
-                return cb(null, dataU.length);
+                return cb(null);
             });
+
         });
 
 

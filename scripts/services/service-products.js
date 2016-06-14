@@ -16,6 +16,26 @@ angular
             return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idReceta);
         };
 
+        // Obtenemos el producto que queremos buscar.
+        this.buscarProductos = function(datos) {
+            console.log("buscar Productos LOG", datos);
+            let name = datos.name;
+            let minprice = datos.name;
+            let maxprice = datos.name;
+            let dist = datos.name;
+            let cat1 = datos.name;
+            let cat2 = datos.name;
+            let cat3 = datos.name;
+            let criteria = "";
+
+            if (typeof name !== 'undefined') {
+                criteria = criteria + "name=" + name;
+            }
+            
+
+            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/searchProduct?" + criteria );
+        };
+
         // Guardamos la receta.
         this.guardarReceta = function(receta, imagen) {
 
@@ -98,5 +118,7 @@ angular
             else {
                 alert("El navegador no soporta geolocalización");
             }
-        }
+        };
+
+        
     });
