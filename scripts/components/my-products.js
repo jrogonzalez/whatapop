@@ -7,7 +7,7 @@ angular
         templateUrl: "views/my-products.html",
 
         // En 'controller' establecemos la lógica del componente.
-        controller: function(ServiceProducts) {
+        controller: function(ServiceProducts, UserService) {
 
             var self = this;
 
@@ -20,30 +20,54 @@ angular
 
                 // Como 'obtenerRecetas()' retorna una promesa, tengo que
                 // pasar un manejador a su funcion 'then()'.
-                ServiceProducts.obtenerRecetas().then(function(respuesta) {
+                ServiceProducts.showProducts().then(function(respuesta) {
 
                     self.productList = respuesta.data.results;
+                    self.total = respuesta.data.total;
 
                 });
             };
 
             // Guardamos la receta.
-            self.buscarProductos = function(datos) {
+            self.searchProducts = function(datos) {
 
-                console.log("log buscar productos");
+            //console.log("filtros pantalla buscar productos", datos);
                 ServiceProducts
-                    .buscarProductos(datos)
+                    .searchProducts(datos)
                     .then(function(resultado) {
 
-                        console.log("resultado: ", resultado.data);
+                        //console.log("resultado: ", resultado.data);
 
-                        self.coleccion = resultado;
+                        //Debemos buscar al seller para saber sus coordenadas
+                        UserService.searchUser(resultado.data.products[0].seller.id).then(function (result) {
+
+                            var coords = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
+
+                            ServiceProducts.obtenerGeolocalizacion(coords);
+                        });
+
+
+
+                        self.productList = resultado.data.products;
+                        self.total = resultado.data.total;
 
                         // $router tiene los datos relacionados con la ruta
                         // que se está navegando. Puedo ejecutar su función
                         // 'navigate()' para hacer una redirección.
                         //self.$router.navigate(["MisRecetas"]);
                     });
+            };
+
+            // Guardamos la receta.
+            self.defaultSearch = function() {
+
+                // Como 'obtenerRecetas()' retorna una promesa, tengo que
+                // pasar un manejador a su funcion 'then()'.
+                ServiceProducts.showProducts().then(function(respuesta) {
+
+                    self.productList = respuesta.data.results;
+
+                });
             };
 
             // Obtenemos la ruta absoluta de la imagen.

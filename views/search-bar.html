@@ -13,7 +13,7 @@
             required>
 
     <!-- Product Price -->
-    <label>
+    <label for="product-min-price">
         Price
     </label>
 
@@ -57,21 +57,6 @@
     <!-- <tt>value1 = {{checkboxModel.value1}}</tt><br/> -->
     <!--<tt>value2 = {{checkboxModel.value2}}</tt><br/> -->
 
-
-    <!-- Product Distance -->
-    <label>
-        <input type="radio" ng-model="datos.dist" value="1">
-        Cerca
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.dist" value="2">
-        Media
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.dist" value="3">
-        Lejos
-    </label>
-
     <!-- Product Publish Date -->
     <label>
         <input type="radio" ng-model="datos.date" value="1">
@@ -90,14 +75,32 @@
         Cualquier Fecha
     </label>
 
+    <!-- Product Distance -->
+    <label>
+        <input type="radio" ng-model="datos.dist" value="1">
+        Cerca
+    </label>
+    <label>
+        <input type="radio" ng-model="datos.dist" value="2">
+        Media
+    </label>
+    <label>
+        <input type="radio" ng-model="datos.dist" value="3">
+        Lejos
+    </label>
 
-    <!-- Botón para guardar receta -->
-        <button
-            ng-click="buscarDatos()"
-            class="u-full-width button-primary">
-            Aceptar
-        </button>
+    <!-- Button for search one product -->
+    <button
+        ng-click="searchData()"
+        class="u-full-width button-primary">
+        Search
+    </button>
 
-
+    <!-- Button for reset filter -->
+    <button
+        ng-click="defaultSearch()"
+        class="u-full-width button-primary">
+        Reset Filter
+    </button>
 
 </div>

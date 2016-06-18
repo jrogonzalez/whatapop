@@ -1,39 +1,81 @@
 
 angular
     .module("whatapop")
-    .service("ServiceProducts", function($http, Properties) {
+    .service("ServiceProducts", function($http, Properties, $haversine, UserService) {
 
         // Toda funcionalidad que quieras exponer hacia
         // afuera, tiene que estar publicada en this.
         
         // Obtenemos la colección de productos.
-        this.obtenerRecetas = function() {
+        this.showProducts = function() {
             return $http.get(Properties.urlServidor + Properties.endpointProduct + "/showProducts");
         };
 
         // Obtenemos el producto que queremos buscar.
-        this.obtenerReceta = function(idReceta) {
-            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idReceta);
+        this.findProduct = function(idProduct) {
+
+            var results = $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idProduct);
+            console.log("RESULTS", results);
+            var distance;
+
+            /*
+            //Debemos buscar al seller para saber sus coordenadas
+            UserService.searchUser(respuesta.data.results.seller.id).then(function (result) {
+
+                var coords = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
+
+                distance = ServiceProducts.obtenerGeolocalizacion(coords);
+            });*/
+
+            var salida = {
+                "results": results,
+                "distance": distance
+            };
+
+            return results;
         };
 
         // Obtenemos el producto que queremos buscar.
-        this.buscarProductos = function(datos) {
+        this.searchProducts = function(datos) {
             console.log("buscar Productos LOG", datos);
             let name = datos.name;
-            let minprice = datos.name;
-            let maxprice = datos.name;
-            let dist = datos.name;
-            let cat1 = datos.name;
-            let cat2 = datos.name;
-            let cat3 = datos.name;
-            let criteria = "";
+            let minprice = datos.minprice;
+            let maxprice = datos.maxprice;
+            let dist = datos.dist;
+            let cat1 = datos.cat1;
+            let cat2 = datos.cat2;
+            let cat3 = datos.cat3;
+            let criteria = "?";
 
-            if (typeof name !== 'undefined') {
-                criteria = criteria + "name=" + name;
+            if (typeof name !== 'undefined' && name !== "") {
+                criteria = criteria + "name=" + name + "&";
             }
+
+            if (typeof cat1 !== 'undefined' && cat1 !== "") {
+                criteria = criteria + "cat1=" + cat1 + "&";
+            }
+            if (typeof cat2 !== 'undefined' && cat2 !== "") {
+                criteria = criteria + "cat2=" + cat2 + "&";
+            }
+            if (typeof cat3 !== 'undefined' && cat3 !== "") {
+                criteria = criteria + "cat3=" + cat3 + "&";
+            }
+
+            if (typeof minprice !== 'undefined' && minprice !== "") {
+                criteria = criteria + "minprice=" + minprice + "&";
+            }
+            if (typeof maxprice !== 'undefined' && maxprice !== "") {
+                criteria = criteria + "maxprice=" + maxprice + "&";
+            }
+
+            if (typeof dist !== 'undefined' && dist !== "") {
+                criteria = criteria + "dist=" + dist + "&";
+            }
+
+            console.log("criteria", criteria);
             
 
-            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/searchProduct?" + criteria );
+            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/searchProduct" + criteria );
         };
 
         // Guardamos la receta.
@@ -94,7 +136,9 @@ angular
                 : undefined;
         };
 
-        this.obtenerGeolocaliacon = function() {
+        this.obtenerGeolocalizacion = function(coordenadas) {
+
+            console.log("latitud: "+ coordenadas.latitude + "longirud: " + coordenadas.longitude);
 
             // Preguntamos si la API está soportada.
             if (navigator.geolocation) {
@@ -105,7 +149,12 @@ angular
                     // En caso de obtener la posición.
                     function(datos) {
 
-                        return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
+                        var distance = $haversine.distance(coordenadas, datos.coords);
+                        console.log("distance: ", distance);
+
+                        return distance;
+
+                        //return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
                     },
 
                     // El usuario no autorizó la petición de posición.

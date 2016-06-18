@@ -9,7 +9,7 @@ angular
         bindings: {
             $router: "<"
         },
-        templateUrl: "views/new-product.html",
+        templateUrl: "views/new-detail-product.html",
         controller: function(ServiceProducts) {
 
             // Guardamos la referencia al componente.

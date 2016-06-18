@@ -7,7 +7,7 @@ angular
             nuevoIngrediente: "&",
             ingredienteEliminado: "&"
         },
-        templateUrl: "views/search-product.html",
+        templateUrl: "views/search-detail-product.html",
         controller: function(ServiceProducts) {
             
             var self = this;

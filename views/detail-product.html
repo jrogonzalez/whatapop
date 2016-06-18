@@ -1,0 +1,60 @@
+<div class="row">
+    <!-- Enlace para volver a la vista anterior -->
+    <div class="one column">
+        <a href="javascript:history.back();">Atrás</a>
+    </div>
+
+</div>
+<div class="row">
+    <div class="twelve columns">
+
+       <!-- Lista de recetas -->
+        <table class="u-full-width">
+            <tbody>
+            <tr>
+                <td>
+                    <img
+                            ng-src="{{ ::$ctrl.obtenerRutaImagen($ctrl.productList.photo) }}"
+                            width="400"
+                            height="400">
+                </td>
+                <td>
+                    <!-- Podemos utilizar este ngClick para mostrar u ocultar
+                         los datos de los ingredientes -->
+                    <!-- ng-click="receta.mostrar = !receta.mostrar" -->
+                    <label for="name">Name</label>
+                    <div id="name">{{ ::$ctrl.productList.name }}</div>
+
+                    <label for="description">Description</label>
+                    <div id="description" ng-bind-html="$ctrl.textHtml($ctrl.productList.description)"></div>
+
+                    <label for="price">Price</label>
+                    <div id="price">{{ $ctrl.productList.price | EurPrice }}</div>
+
+                    <label for="category-name">Category</label>
+                    <div id="category-name">{{ ::$ctrl.productList.category.name }}</div>
+
+                    <label for="publish-date">Publish Date</label>
+                    <div id="publish-date">{{ ::$ctrl.productList.published_date | date }}</div>
+
+                    <label for="state">State</label>
+                    <div id="state">{{ ::$ctrl.productList.state }}</div>
+
+                    <label for="distance">Distance</label>
+                    <div id="distance">{{ ::$ctrl.distance }}</div>
+
+                    <label for="seller-nick">Seller</label>
+                    <div id="seller-nick">{{ ::$ctrl.productList.seller.nick }}</div>
+
+                    <img
+                            id="image"
+                            ng-src="{{ ::$ctrl.obtenerRutaImagen($ctrl.productList.seller.avatar) }}"
+                            width="50"
+                            height="50">
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

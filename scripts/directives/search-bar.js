@@ -19,7 +19,8 @@ angular
             scope: {
 
                 // Con '&' notificamos eventos al scope padre.
-                botonPulsado: "&"
+                buttonSearchSelected: "&",
+                buttonResetSelected: "&"
             },
 
             // Con 'link' establecemos la lógica de la directiva y además
@@ -27,14 +28,14 @@ angular
             link: function(scope) {
                     
                 scope.datos = {
-                    name: String,
-                    minprice: String,
-                    maxprice: String,
-                    dist: String,
-                    cat1: String,
-                    cat2: String,
-                    cat3: String,
-                    date: String
+                    name: "",
+                    minprice: "",
+                    maxprice: "",
+                    dist: "",
+                    cat1: "",
+                    cat2: "",
+                    cat3: "",
+                    date: ""
                 };
 
                 /*
@@ -63,12 +64,16 @@ angular
                 };
                 */
 
-                scope.buscarDatos = function() {
-                    console.log("directiva: guardamos datos", scope.datos);
-
+                scope.searchData = function() {
 
                     // Notificamos al scope padre.
-                    scope.botonPulsado({ datos: scope.datos });
+                    scope.buttonSearchSelected({ datos: scope.datos });
+                };
+
+                scope.defaultSearch = function() {
+                    
+                    // Notificamos al scope padre.
+                    scope.buttonResetSelected({ datos: scope.datos });
                 };
 
                 /*

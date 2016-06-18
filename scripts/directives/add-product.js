@@ -12,7 +12,7 @@ angular
             // Con 'template' o 'templateUrl' indicamos la jerarquía de
             // componentesque el navegador va a renderizar como vista
             // de la directiva.
-            templateUrl: "views/add-product.html",
+            templateUrl: "views/add-detail-product.html",
 
             // Con 'scope' definimos la interfaz de comunicación entre la
             // directiva y el scope padre (controlador / componentes).

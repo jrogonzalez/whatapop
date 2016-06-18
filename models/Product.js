@@ -46,7 +46,6 @@ var Product = mongoose.model('Product', productSchema);
 var productOperations = function() {
     return {
         searchProduct: function(req, res) {
-            let id = req.query.id;
             let name = req.query.name;
             let description = req.description;
             let cat1 = req.query.cat1;
@@ -56,39 +55,44 @@ var productOperations = function() {
             let dist = req.query.dist;
             let date = req.query.date;
             let state = req.query.state;
+            var minprice = req.query.minprice || null;
+            var maxprice = req.query.maxprice || null;
 
             // NORMA: no se suele usar las variables directamente de lo que llega del metodo sino que se pasan a variables y se usan desde ahi
             var criteria = {};
             var start = parseInt(req.query.start) || 0; //esto quiere decir que si no me pasan parametro start empiezo desde la 0. Esto es pa paginacion
             var limit = parseInt(req.query.limit) || null;
             var sort = req.query.sort || null;
-            var minprice = req.query.minprice || null;
-            var maxprice = req.query.maxprice || null;
+
             var includeTotal = req.query.includeTotal || 'true';
 
-            if (typeof id !== 'undefined'){
-                console.log('entra id');
-                criteria.id = id;
-            }
-            if (typeof name !== 'undefined'){
+            // NAME FILTER
+            if (typeof name !== 'undefined' && name !== null){
                 console.log('entra name');
                 criteria.name = new RegExp('^' + name, 'i');
             }
-            if (typeof description !== 'undefined') {
+
+            // DESCRIPTION FILTER (not impplemented yet)
+            /*if (typeof description !== 'undefined') {
                 console.log('entra description');
                 criteria.description = new RegExp('^' + description, 'i');
             }
-           
+            */
+
+            // SELLET FILTER (not impplemented yet)
+            /*
             if (typeof seller !== 'undefined'){
                 console.log('entra seller');
                 criteria.seller = seller;
             }
+            */
 
             // Añadimos siempre el estado de vendiendose y no sacamos los que ya han sido vendidos
             console.log('entra state');
             criteria.state = 'selling';
 
 
+            // PRICE FILTER
             if ((typeof minprice !== 'undefined' && minprice !== null) && (typeof maxprice !== 'undefined' && maxprice !== null)){
                 console.log("entra por ambos");
                 criteria.price = { '$gte': minprice, '$lte': maxprice };
@@ -103,8 +107,11 @@ var productOperations = function() {
                 criteria.price = { '$lte': maxprice };
             }
 
+
+            // DATE FILTER
             let searchDate =  new Date();
             console.log("fechaActual", searchDate);
+            console.log("PRODUCT CRITERIA", criteria);
 
             if (typeof date !== 'undefined' && date !== null && date === '1'){
                 console.log('entra searchDate1');
@@ -129,15 +136,9 @@ var productOperations = function() {
 
             }
 
-            /*if (typeof published_date !== 'undefined'){
-                console.log('entra published_date');
-                criteria.published_date = published_date;
-            }
-            */
-            
-            
-            
 
+
+            // CATEGORY FILTER
             var category = [];
             var cri = "";
             if (typeof cat1 !== 'undefined' && cat1 !== null){
@@ -157,13 +158,26 @@ var productOperations = function() {
                 console.log("creiteria, cat: ", criteria.category)
             }
 
+
+            // DESCRIPTION FILTER (not impplemented yet)
+            if (typeof dist !== 'undefined' && dist !== null){
+
+            }
+
+
+
+
+
             Product.list(criteria, start, limit, sort, function(err, rows) {
                 if (err){
+                    console.log("Error en BUSQUEDA");
                     return Error('err002', req, res, 400);
                 }
                 if (includeTotal === 'true'){
+                    console.log("ROWS TOTAL", rows);
                     res.json({success: true, total: rows.length, products: rows});
                 }else{
+                    console.log("ROWS", rows);
                     res.json({success: true, products: rows});
                 }
             });
@@ -208,7 +222,7 @@ var productOperations = function() {
                 if (err){
                     return Error('err002', req, res, 400);
                 }
-                res.json({success: true, results: results});
+                res.json({success: true, total: results.length, results: results});
             });
         },
         showProduct: function(req, res) {
