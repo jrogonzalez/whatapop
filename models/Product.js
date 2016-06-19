@@ -94,9 +94,13 @@ var productOperations = function() {
                 criteria.name = new RegExp('^' + name, 'i');
             }
 
-            // Añadimos siempre el estado de vendiendose y no sacamos los que ya han sido vendidos
-            //console.log('entra state');
-            //criteria.state = 'selling';
+            // STATE FILTER
+            if (typeof state !== 'undefined' && state !== null && state === '1'){
+                criteria.state = 'sold';
+            }else if (typeof state !== 'undefined' && state !== null && state === '0'){
+                criteria.state = 'selling';
+            }
+
 
 
             // PRICE FILTER

@@ -24,6 +24,7 @@ angular
             let cat2 = datos.cat2;
             let cat3 = datos.cat3;
             let date = datos.date;
+            let state = datos.state;
             let criteria = "?";
 
             if (typeof name !== 'undefined' && name !== "") {
@@ -49,6 +50,10 @@ angular
 
             if (typeof date !== 'undefined' && date !== "") {
                 criteria = criteria + "date=" + date + "&";
+            }
+
+            if (typeof state !== 'undefined' && state !== "") {
+                criteria = criteria + "state=" + state + "&";
             }
 
             console.log("criteria", criteria);

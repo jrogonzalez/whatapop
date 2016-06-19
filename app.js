@@ -8,6 +8,16 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+
+// Set the middleware to support CORS requests.
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Accept, Authorization, Cache-Control, Content-Type, Origin, Pragma, X-Requested-With");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    next();
+});
+
 // Obtengo el lenguaje leyendo cabecera x-lang
 app.use((req, res, next) => {
     req.lang = req.get('x-lang') || 'en';

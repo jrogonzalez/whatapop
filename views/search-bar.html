@@ -42,43 +42,50 @@
             required>
 
     <!-- Product Category -->
-    <label>Videjuegos
-        <input type="checkbox" ng-model="datos.cat1"
-               ng-true-value="'Videojuegos'" ng-false-value="'NO'">
-    </label>
-    <label>Películas
-        <input type="checkbox" ng-model="datos.cat2"
-               ng-true-value="'Peliculas'" ng-false-value="'NO'">
-    </label>
-    <label>Libros
-        <input type="checkbox" ng-model="datos.cat3"
-               ng-true-value="'Libros'" ng-false-value="'NO'">
-    </label>
-    <label>Todas
-        <input type="checkbox" ng-model="datos.cat4"
-               ng-true-value="'Todas'" ng-false-value="'NO'">
-    </label>
-
+    <label for="category">Category</label>
+        <div id="category">
+        <label>Videjuegos
+            <input type="checkbox" ng-model="datos.cat1"
+                   ng-true-value="'Videojuegos'" ng-false-value="'NO'">
+        </label>
+        <label>Películas
+            <input type="checkbox" ng-model="datos.cat2"
+                   ng-true-value="'Peliculas'" ng-false-value="'NO'">
+        </label>
+        <label>Libros
+            <input type="checkbox" ng-model="datos.cat3"
+                   ng-true-value="'Libros'" ng-false-value="'NO'">
+        </label>
+        <label>Todas
+            <input type="checkbox" ng-model="datos.cat4"
+                   ng-true-value="'Todas'" ng-false-value="'NO'">
+        </label>
+    </div>
     <!-- Product Publish Date -->
-    <label>
-        <input type="radio" ng-model="datos.date" value="1">
-        Ultimas 24 horas
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.date" value="2">
-        Ultimos 7 dias
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.date" value="3">
-        Ultimos 30 dias
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.date" value="4" ng-checked="true">
-        Cualquier Fecha
-    </label>
+    <label for="publish_date">Publish Date</label>
+    <div id="publish_date">
+        <label>
+            <input type="radio" ng-model="datos.date" value="1">
+            Ultimas 24 horas
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.date" value="2">
+            Ultimos 7 dias
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.date" value="3">
+            Ultimos 30 dias
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.date" value="4" ng-checked="true">
+            Cualquier Fecha
+        </label>
+
+    </div>
 
     <!-- Product Distance -->
-    <div>
+    <label for="distance">Distance</label>
+    <div id="distance">
         <label>
             <input type="radio" ng-model="datos.dist" value="5">
             Cerca (< 5 km)
@@ -90,6 +97,19 @@
         <label>
             <input type="radio" ng-model="datos.dist" value="100" ng-checked="true">
             Lejos (< 100 km)
+        </label>
+    </div>
+
+    <!-- Product State -->
+    <label for="state">Product State</label>
+    <div id="state">
+        <label>
+            <input type="radio" ng-model="datos.state" value="0">
+            Selling
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.state" value="1">
+            Sold
         </label>
     </div>
 
