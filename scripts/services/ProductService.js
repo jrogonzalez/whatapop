@@ -3,30 +3,27 @@ angular
     .module("whatapop")
     .service("ServiceProducts", function($http, Properties, $haversine, UserService, $q) {
 
-        // Toda funcionalidad que quieras exponer hacia
-        // afuera, tiene que estar publicada en this.
-        
-        // Obtenemos la colección de productos.
+        // show all products
         this.showProducts = function() {
             return $http.get(Properties.urlServidor + Properties.endpointProduct + "/showProducts");
         };
 
-        // Obtenemos el producto que queremos buscar.
+        // search a producto by id
         this.findProduct = function(idProduct) {
 
             return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idProduct);;
         };
 
-        // Obtenemos el producto que queremos buscar.
+        // Search for a criteria introduced for the user
         this.searchProducts = function(datos) {
             console.log("buscar Productos LOG", datos);
             let name = datos.name;
             let minprice = datos.minprice;
             let maxprice = datos.maxprice;
-            let dist = datos.dist;
             let cat1 = datos.cat1;
             let cat2 = datos.cat2;
             let cat3 = datos.cat3;
+            let date = datos.date;
             let criteria = "?";
 
             if (typeof name !== 'undefined' && name !== "") {
@@ -50,8 +47,8 @@ angular
                 criteria = criteria + "maxprice=" + maxprice + "&";
             }
 
-            if (typeof dist !== 'undefined' && dist !== "") {
-                criteria = criteria + "dist=" + dist + "&";
+            if (typeof date !== 'undefined' && date !== "") {
+                criteria = criteria + "date=" + date + "&";
             }
 
             console.log("criteria", criteria);
@@ -60,57 +57,13 @@ angular
             return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/searchProduct" + criteria );
         };
 
-        // Guardamos la receta.
-        this.guardarReceta = function(receta, imagen) {
+        // Save a new Product
+        this.addProduct = function(receta, imagen) {
 
-            var promesa;
 
-            // Si la imagen viene dada.
-            if (imagen) {
-
-                // Montamos un 'FormData' con la imagen.
-                var datos = new FormData();
-                datos.append("img", imagen);
-
-                // Configuramos el 'Content-Type' de la petición.
-                // Tenemos que indicarlo como 'undefined' para que
-                // AngularJS infiera el tipo de la petición.
-                var configuracion = {
-                    "headers": {
-                        "Content-Type": undefined
-                    }
-                };
-
-                // Subimos la imagen al servidor.
-                promesa = $http
-                    .post(
-                        Properties.urlServidor + Properties.endpointImages ,
-                        datos,
-                        configuracion
-                    )
-                    .then(function(respuesta) {
-
-                        // En la propiedad 'path' me viene dada
-                        // la ruta relativa de la imagen subida.
-                        var ruta = respuesta.data.path;
-
-                        // Establecemos la ruta de la imagen en
-                        // el objeto receta antes de guardarla.
-                        receta.rutaImagen = ruta;
-
-                        return $http.post(Properties.urlServidor + Properties.endpointProduct +  receta);
-                    });
-            }
-
-            // En caso de no haber indicado una imagen.
-            else {
-                promesa = $http.post(Properties.urlServidor + Properties.endpointProduct +  receta);
-            }
-
-            return promesa;
         };
 
-        // Montamos la ruta absoluta a la imagen indicada.
+        //
         this.obtenerRutaImagenAbsoluta = function(rutaRelativa) {
 
             return rutaRelativa
@@ -118,49 +71,37 @@ angular
                 : undefined;
         };
 
-        this.obtenerGeolocalizacion = function(userId) {
+        this.obtenerGeolocalizacion = function() {
 
             var deferred = $q.defer();
 
-            //Debemos buscar al seller para saber sus coordenadas
-            UserService.searchUser(userId).then(function (result) {
+            // ask wether the API is supported
+            if (navigator.geolocation) {
 
-                var coordenadas = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
-                
+                // Solicitamos la posición.
+                navigator.geolocation.getCurrentPosition(
 
-                // Preguntamos si la API está soportada.
-                if (navigator.geolocation) {
+                    // Obtain th position.
+                    function(datos) {
 
-                    // Solicitamos la posición.
-                    navigator.geolocation.getCurrentPosition(
+                        deferred.resolve({"latitude": datos.coords.latitude, "longitude": datos.coords.longitude});
+                    },
 
-                        // En caso de obtener la posición.
-                        function(datos) {
-
-                            var distance = $haversine.distance(coordenadas, datos.coords);
-                            console.log("distance: ", distance);
-
-
-                            deferred.resolve({ "distance": distance });
-
-                            //return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
-                        },
-
-                        // El usuario no autorizó la petición de posición.
-                        function() {
-                            alert("¡El usuario no autorizó!");
-                        }
-                    );
-                }
-                // En caso de no estar soportada.
-                else {
-                    alert("El navegador no soporta geolocalización");
-                }
-
-            });
+                    // User doesnt authorize the petition.
+                    function() {
+                        alert("¡El usuario no autorizó!");
+                    }
+                );
+            }
+            // Geolocalize is not supported.
+            else {
+                alert("El navegador no soporta geolocalización");
+            }
 
             return deferred.promise;
         };
 
-        
+
+
+
     });

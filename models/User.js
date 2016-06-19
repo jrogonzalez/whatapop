@@ -105,7 +105,6 @@ var userOperations = function() {
                 if (err){
                     return Error('err002', req, res, 400);
                 }
-                console.log(result);
                 res.json({success: true,result: result});
             });
 
@@ -201,7 +200,6 @@ var userOperations = function() {
                 if (err){
                     return Error('err002', req, res, 400);
                 }
-                console.log(result);
                 res.json({success: true,result: result});
             });
 

@@ -16,7 +16,7 @@ router.post('/createUser', function(req, res, next) {
     user.createUser(req, res, next);
 });
 
-router.get('/showUsers', jwtAuth(), function(req, res, next) {
+router.get('/showUsers',  function(req, res, next) {
     user.showUsers(req, res, next);
 });
 

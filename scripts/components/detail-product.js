@@ -2,37 +2,50 @@ angular
     .module("whatapop")
     .component("detailProduct", {
 
-        // Con 'template' / 'templateUrl' establecemos la vista del componente.
+        // With 'template' / 'templateUrl' establish the componente view.
         templateUrl: "views/detail-product.html",
 
-        // En 'controller' establecemos la lógica del componente.
-        controller: function(ServiceProducts, UserService,$sce, $q) {
+        // establish the 'controller' logic.
+        controller: function(ServiceProducts, UserService,$sce, $haversine) {
 
             var self = this;
 
             // Filtro para buscar recetas por nombre.
             self.filtroRecetas = { name: "" };
 
-            // Podemos engancharnos al hook '$onInit', que se
-            // dispara cuando el componente se inicia.
+            self.localizacion = {
+                latitude: "",
+                longitude: ""
+            }
+
+            // Hook '$onInit'
             self.$onInit = function() {
 
                 self.$routerOnActivate = function (next) {
                     var id = next.params.id;
 
-                        // Como 'obtenerRecetas()' retorna una promesa, tengo que
-                        // pasar un manejador a su funcion 'then()'.
+
+                    ServiceProducts.obtenerGeolocalizacion().then(function (resp) {
+                        console.log("COORDENADAS", resp);
+                        self.localizacion.latitude = resp.latitude;
+                        self.localizacion.longitude = resp.longitude;
+
                         ServiceProducts.findProduct(id).then(function (respuesta) {
 
-                            ServiceProducts.obtenerGeolocalizacion(respuesta.data.results.seller.id).then(function (resp2) {
-                                console.log("DISTANCIA", resp2);
-                                self.distance = resp2.distance;
+                            UserService.searchUser(respuesta.data.results.seller.id).then(function (result) {
+
+                                var coodSeller = {
+                                    "latitude": result.data.result.latitude,
+                                    "longitude": result.data.result.longitude
+                                }
+
+                                self.distance = $haversine.distance(coodSeller, self.localizacion);
+
                             });
 
                             self.productList = respuesta.data.results;
-                            console.log("data", respuesta.data.results);
-                        })
-
+                        });
+                    });
                 };
             };
 
@@ -40,7 +53,7 @@ angular
                 return $sce.trustAsHtml(text);
             };
 
-            // Obtenemos la ruta absoluta de la imagen.
+            // Obtain the absolute image route.
             self.obtenerRutaImagen = ServiceProducts.obtenerRutaImagenAbsoluta;
         }
     });

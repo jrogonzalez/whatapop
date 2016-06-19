@@ -1,41 +1,33 @@
 <div class="row">
     <div class="twelve columns">
 
-        <!-- Formulario de busqueda de productos
-        <div class="seven columns">
-            <search-bar boton-pulsado="$ctrl.buscarProductos(datos)"></search-bar>
-        </div>
-        -->
-
-        <!-- Filtro de recetas
-        <label for="filtro-recetas">Busca una receta por su nombre</label>
-        <input
-            id="filtro-recetas"
-            type="text"
-            placeholder="Pe. Tortilla"
-            ng-model="$ctrl.filtroRecetas.name">-->
-
-
-        <!-- Formulario de bsusqueda de productos-->
+        <!-- Formulario de busqueda de productos-->
         <div class="seven columns">
             <search-bar button-search-selected="$ctrl.searchProducts(datos)"
                         button-reset-selected="$ctrl.defaultSearch()"></search-bar>
         </div>
 
-        <!-- Lista de recetas -->
+        <!-- Product List -->
         <table class="u-full-width">
             <tbody>
             <tr>
                 <td>
                     <div>
                         <label for="total">Total Results: </label>
-                        <div id="total" align="left">{{ $ctrl.total }}</div>
+                        <div id="total" align="left"
+                             ng-if="($ctrl.productList.length > 0 && $ctrl.finish == 1)">{{ $ctrl.total }}</div>
+                    </div>
+                    <div>
+                        <label ng-if="($ctrl.productList.length == 0 && $ctrl.finish == 1)">No results for the incoming search</label>
+                    </div>
+
+                    <div class="u-full-width" ng-hide="$ctrl.finish > 0" ng-show="$ctrl.finish == 0">
+                        Searching
                     </div>
                 </td>
             </tr>
 
-                <tr ng-repeat="product in $ctrl.productList | filter:$ctrl.filtroRecetas | orderBy:'name'">
-                <!-- <tr ng-repeat="receta in $ctrl.recetas"> -->
+                <tr ng-repeat="product in $ctrl.productList | orderBy:'name' track by $index ">
                     <td>
                         <img
                             ng-src="{{ $ctrl.obtenerRutaImagen(product.photo) }}"
@@ -43,22 +35,16 @@
                             height="60">
                     </td>
                     <td>
-                        <!-- Podemos utilizar este ngClick para mostrar u ocultar
-                             los datos de los ingredientes -->
-                        <!-- ng-click="receta.mostrar = !receta.mostrar" -->
                         <div>{{ product.name }}</div>
 
                         <div>{{ product.price | EurPrice }}</div>
 
+                        <div>{{ product.state | uppercase }}</div>
+
+                        <div>{{ $ctrl.datos.dist }}</div>
 
                         <a ng-link="['DetailProduct', { id: product.id }]">Details</a>
-                        <!-- Este ngShow debe ir complementando al ngClick de más arriba -->
-                        <!-- ng-show="receta.mostrar" -->
-                        <div>
-                            <small>
-                                {{ product.ingredientes | ResumenIngredientes }}
-                            </small>
-                        </div>
+
                     </td>
                 </tr>
             </tbody>

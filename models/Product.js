@@ -52,14 +52,37 @@ var productOperations = function() {
             let cat2 = req.query.cat2;
             let cat3 = req.query.cat3;
             let seller = req.query.seller;
-            let dist = req.query.dist;
             let date = req.query.date;
             let state = req.query.state;
             var minprice = req.query.minprice || null;
             var maxprice = req.query.maxprice || null;
 
+
+            // CATEGORY FILTER
+            var category = [];
+
+
+            if (typeof cat1 !== 'undefined' && cat1 !== null && cat1 !== "NO"){
+                category.push(cat1);
+            }
+            if (typeof cat2 !== 'undefined' && cat2 !== null && cat2 !== "NO"){
+                category.push(cat2);
+            }
+            if (typeof cat3 !== 'undefined' && cat3 !== null && cat3 !== "NO"){
+                category.push(cat3);
+            }
+
+
             // NORMA: no se suele usar las variables directamente de lo que llega del metodo sino que se pasan a variables y se usan desde ahi
-            var criteria = {};
+            var criteria = {
+                'category.name': { $in: category }
+            };
+
+            if (category.length == 0){
+                criteria = {}
+            }
+
+
             var start = parseInt(req.query.start) || 0; //esto quiere decir que si no me pasan parametro start empiezo desde la 0. Esto es pa paginacion
             var limit = parseInt(req.query.limit) || null;
             var sort = req.query.sort || null;
@@ -68,116 +91,50 @@ var productOperations = function() {
 
             // NAME FILTER
             if (typeof name !== 'undefined' && name !== null){
-                console.log('entra name');
                 criteria.name = new RegExp('^' + name, 'i');
             }
 
-            // DESCRIPTION FILTER (not impplemented yet)
-            /*if (typeof description !== 'undefined') {
-                console.log('entra description');
-                criteria.description = new RegExp('^' + description, 'i');
-            }
-            */
-
-            // SELLET FILTER (not impplemented yet)
-            /*
-            if (typeof seller !== 'undefined'){
-                console.log('entra seller');
-                criteria.seller = seller;
-            }
-            */
-
             // Añadimos siempre el estado de vendiendose y no sacamos los que ya han sido vendidos
-            console.log('entra state');
-            criteria.state = 'selling';
+            //console.log('entra state');
+            //criteria.state = 'selling';
 
 
             // PRICE FILTER
             if ((typeof minprice !== 'undefined' && minprice !== null) && (typeof maxprice !== 'undefined' && maxprice !== null)){
-                console.log("entra por ambos");
                 criteria.price = { '$gte': minprice, '$lte': maxprice };
             }
             else if (typeof minprice !== 'undefined' && minprice !== null){
-                console.log("entra por el minprice");
                 criteria.price = { '$gte': minprice };
             }
             else if (typeof maxprice !== 'undefined' && maxprice !== null){
-                console.log("entra por el maxprice");
 
                 criteria.price = { '$lte': maxprice };
             }
 
-
             // DATE FILTER
             let searchDate =  new Date();
-            console.log("fechaActual", searchDate);
-            console.log("PRODUCT CRITERIA", criteria);
 
             if (typeof date !== 'undefined' && date !== null && date === '1'){
-                console.log('entra searchDate1');
-                console.log(sumarDias(searchDate, -1));
+                addDays(searchDate, -1);
                 criteria.published_date = { '$gte': searchDate.getTime() };
-                console.log(searchDate.getTime());
             }
             else if (typeof date !== 'undefined' && date !== null && date === '2'){
-                console.log('entra searchDate2');
-                console.log(sumarDias(searchDate, -7));
+                addDays(searchDate, -7);
                 criteria.published_date = { '$gte': searchDate.getTime() };
-                console.log(searchDate.getTime());
             }
             else if (typeof date !== 'undefined' && date !== null && date === '3'){
-                console.log('entra searchDate3');
-                console.log(sumarDias(searchDate, -30));
+                addDays(searchDate, -30);
                 criteria.published_date = { '$gte': searchDate.getTime() };
-                console.log(searchDate.getTime());
             }
-            else if (typeof date !== 'undefined' && date !== null && date === '4'){
-                console.log('entra category4');
-
-            }
-
-
-
-            // CATEGORY FILTER
-            var category = [];
-            var cri = "";
-            if (typeof cat1 !== 'undefined' && cat1 !== null){
-                console.log('entra category2');
-                category.push(cat1);
-            }
-            else if (typeof cat2 !== 'undefined' && cat2 !== null){
-                console.log('entra category2');
-                category.push(cat2);
-            }
-            else if (typeof cat3 !== 'undefined' && cat3 !== null){
-                console.log('entra category3');
-                category.push(cat3);
-            }
-            if (category.length > 0){
-                criteria.category.name = category
-                console.log("creiteria, cat: ", criteria.category)
-            }
-
-
-            // DESCRIPTION FILTER (not impplemented yet)
-            if (typeof dist !== 'undefined' && dist !== null){
-
-            }
-
-
-
 
 
             Product.list(criteria, start, limit, sort, function(err, rows) {
                 if (err){
-                    console.log("Error en BUSQUEDA");
                     return Error('err002', req, res, 400);
                 }
                 if (includeTotal === 'true'){
-                    console.log("ROWS TOTAL", rows);
                     res.json({success: true, total: rows.length, products: rows});
                 }else{
-                    console.log("ROWS", rows);
                     res.json({success: true, products: rows});
                 }
             });
@@ -264,9 +221,9 @@ var productOperations = function() {
 
 /* Función que suma o resta días a una fecha, si el parámetro
  días es negativo restará los días*/
-function sumarDias(fecha, dias){
-    fecha.setDate(fecha.getDate() + dias);
-    return fecha;
+function addDays(date, days){
+    date.setDate(date.getDate() + days);
+    return date;
 }
 
 

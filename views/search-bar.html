@@ -2,12 +2,12 @@
 
     <!-- Product Name -->
     <label for="product-name">
-        Nombre del Producto a buscar
+        Name the product for searching
     </label>
     <input
             id="product-name"
             type="text"
-            placeholder="Artículo buscado"
+            placeholder="Name Search"
             class="u-full-width"
             ng-model="datos.name"
             required>
@@ -24,7 +24,7 @@
             id="product-min-price"
             type="text"
             string-to-number
-            placeholder="Precio minimo"
+            placeholder="Min. Price"
             class="u-full-width"
             ng-model="datos.minprice"
             required>
@@ -36,26 +36,28 @@
             id="product-max-price"
             type="text"
             string-to-number
-            placeholder="Precio maximo"
+            placeholder="Max. Price"
             class="u-full-width"
             ng-model="datos.maxprice"
             required>
 
     <!-- Product Category -->
-    <label>Videjuegos:
+    <label>Videjuegos
         <input type="checkbox" ng-model="datos.cat1"
-               ng-true-value="'YES'" ng-false-value="'NO'">
+               ng-true-value="'Videojuegos'" ng-false-value="'NO'">
     </label>
-    <label>Películas:
+    <label>Películas
         <input type="checkbox" ng-model="datos.cat2"
-               ng-true-value="'YES'" ng-false-value="'NO'">
+               ng-true-value="'Peliculas'" ng-false-value="'NO'">
     </label>
-    <label>Libros:
+    <label>Libros
         <input type="checkbox" ng-model="datos.cat3"
-               ng-true-value="'YES'" ng-false-value="'NO'">
+               ng-true-value="'Libros'" ng-false-value="'NO'">
     </label>
-    <!-- <tt>value1 = {{checkboxModel.value1}}</tt><br/> -->
-    <!--<tt>value2 = {{checkboxModel.value2}}</tt><br/> -->
+    <label>Todas
+        <input type="checkbox" ng-model="datos.cat4"
+               ng-true-value="'Todas'" ng-false-value="'NO'">
+    </label>
 
     <!-- Product Publish Date -->
     <label>
@@ -71,23 +73,26 @@
         Ultimos 30 dias
     </label>
     <label>
-        <input type="radio" ng-model="datos.date" value="4">
+        <input type="radio" ng-model="datos.date" value="4" ng-checked="true">
         Cualquier Fecha
     </label>
 
     <!-- Product Distance -->
-    <label>
-        <input type="radio" ng-model="datos.dist" value="1">
-        Cerca
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.dist" value="2">
-        Media
-    </label>
-    <label>
-        <input type="radio" ng-model="datos.dist" value="3">
-        Lejos
-    </label>
+    <div>
+        <label>
+            <input type="radio" ng-model="datos.dist" value="5">
+            Cerca (< 5 km)
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.dist" value="10">
+            Media (< 10 km)
+        </label>
+        <label>
+            <input type="radio" ng-model="datos.dist" value="100" ng-checked="true">
+            Lejos (< 100 km)
+        </label>
+    </div>
+
 
     <!-- Button for search one product -->
     <button

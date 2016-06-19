@@ -8,8 +8,7 @@
 <div class="row">
     <div class="twelve columns">
 
-       <!-- Lista de recetas -->
-
+       <!-- Product Detail -->
         <div class="u-full-width" ng-hide="$ctrl.distance > 0">
             Searching
         </div>
@@ -23,9 +22,6 @@
                             height="400">
                 </td>
                 <td>
-                    <!-- Podemos utilizar este ngClick para mostrar u ocultar
-                         los datos de los ingredientes -->
-                    <!-- ng-click="receta.mostrar = !receta.mostrar" -->
                     <label for="name">Name</label>
                     <div id="name">{{ ::$ctrl.productList.name }}</div>
 

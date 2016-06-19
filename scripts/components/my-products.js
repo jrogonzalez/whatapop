@@ -3,64 +3,107 @@ angular
     .module("whatapop")
     .component("myProducts", {
 
-        // Con 'template' / 'templateUrl' establecemos la vista del componente.
+        // With 'template' / 'templateUrl' establish the component view
         templateUrl: "views/my-products.html",
 
-        // En 'controller' establecemos la lógica del componente.
-        controller: function(ServiceProducts, UserService) {
+        // This 'controller' estabish the logic for the component.
+        controller: function(ServiceProducts, UserService, $haversine, $filter ) {
 
             var self = this;
 
-            // Filtro para buscar recetas por nombre.
-            self.filtroRecetas = { name: "" };
+            self.localizacion = {
+                latitude: "",
+                longitude: ""
+            }
 
-            // Podemos engancharnos al hook '$onInit', que se
-            // dispara cuando el componente se inicia.
+            // This is the initial hook '$onInit', that stats
+            // when the component is initialized.
             self.$onInit = function() {
 
-                // Como 'obtenerRecetas()' retorna una promesa, tengo que
-                // pasar un manejador a su funcion 'then()'.
+                self.finish = 0;
+
+                //  'showProducts()' return a Promise and I have to
+                // pass a manager to the function 'then()'.
                 ServiceProducts.showProducts().then(function(respuesta) {
 
                     self.productList = respuesta.data.results;
                     self.total = respuesta.data.total;
+                    self.finish = 1;
 
                 });
             };
 
-            // Guardamos la receta.
+            // Invoque for a search.
             self.searchProducts = function(datos) {
+                
+                let distance = datos.dist || 100; 
 
-            //console.log("filtros pantalla buscar productos", datos);
-                ServiceProducts
-                    .searchProducts(datos)
-                    .then(function(resultado) {
-
-                        self.distance = ServiceProducts.obtenerGeolocalizacion(resultado.data.products[0].seller.id);
-                        self.productList = resultado.data.products;
-                        self.total = resultado.data.total;
+                self.productList = [];
+                self.total = 0;
+                self.finish = 0;
 
 
-                        // $router tiene los datos relacionados con la ruta
-                        // que se está navegando. Puedo ejecutar su función
-                        // 'navigate()' para hacer una redirección.
-                        //self.$router.navigate(["MisRecetas"]);
+                ServiceProducts.obtenerGeolocalizacion().then(function (resp) {
+                    self.localizacion.latitude = resp.latitude;
+                    self.localizacion.longitude = resp.longitude;
+
+                    UserService.showUsers().then(function (response) {
+
+                        var nearSellers = response.data.result.reduce(function(selected, seller) {
+
+                            var sellerLocalization = {
+                                "latitude": seller.latitude,
+                                "longitude": seller.longitude
+                            }
+
+                            var distanceKm = parseInt($haversine.distance(sellerLocalization, self.localizacion)/1000, 10);
+
+                            if (distanceKm < distance) {
+                                selected.push(seller.id);
+                            }
+                            return selected;
+                        }, []);
+
+
+
+                        //console.log("filtros pantalla buscar productos", datos);
+                        ServiceProducts
+                            .searchProducts(datos)
+                            .then(function(resultado) {
+
+                                var products = resultado.data.products;
+
+                                // Filter by sooner sellers.
+                                var nearProducts = $filter("filter")(products, function(producto) {
+                                    return nearSellers.indexOf(producto.seller.id) > -1;
+                                });
+
+                                self.productList = nearProducts;
+                                self.total = nearProducts.length;
+                                self.finish = 1;
+
+
+                            });
                     });
+                });
             };
 
-            // Guardamos la receta.
+            // Reset for default search.
             self.defaultSearch = function() {
 
-                // Como 'obtenerRecetas()' retorna una promesa, tengo que
-                // pasar un manejador a su funcion 'then()'.
+                self.finish = 0;
+
                 ServiceProducts.showProducts().then(function(respuesta) {
 
                     self.productList = respuesta.data.results;
+                    self.total = respuesta.data.total;
+                    self.finish = 1;
 
                 });
             };
 
-            // Obtenemos la ruta absoluta de la imagen.
+            // Obtain the absolute image route.
             self.obtenerRutaImagen = ServiceProducts.obtenerRutaImagenAbsoluta;
+
         }
     });

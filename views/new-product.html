@@ -1,18 +1,16 @@
 <div class="row">
 
-    <!-- Imagen de la receta -->
+    <!-- Product Image -->
     <div class="five columns">
         <image-picker
             image-selected="$ctrl.seleccionarImagen(imageFile)"
             image-deselected="$ctrl.deseleccionarImagen()"></image-picker>
     </div>
 
-    <!-- Formulario de alta de recetas -->
+    <!-- Forma for add Products -->
     <div class="seven columns">
-        <formulario-alta al-hacer-click="$ctrl.guardarReceta(receta)"></formulario-alta>
+        <add-product click-for-save="$ctrl.addProduct(product)"></add-product>
     </div>
-
-
 
 </div>
 

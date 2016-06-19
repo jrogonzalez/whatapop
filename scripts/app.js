@@ -1,5 +1,5 @@
 
-// Setter del módulo.
+// Setter module.
 angular.module("whatapop", [
     "ngComponentRouter",
     "dahr.ng-image-picker",
@@ -7,11 +7,11 @@ angular.module("whatapop", [
     "ngSanitize"
 ]);
 
-// Configuramos el proveedor '$locationProvider'. Establecemos el
-// modo de navegación HTML5 para que funcione el Single Page Application.
+// Configuramos el proveedor '$locationProvider'. Establish
+// HTML5 navigation for working with the SPA.
 angular.module("whatapop").config(function($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
-// En el value '$routerRootComponent' indicamos el componente raíz.
+// With the value '$routerRootComponent' indicate the root component.
 angular.module("whatapop").value("$routerRootComponent","raiz");

@@ -3,121 +3,32 @@ angular
     .module("whatapop")
     .service("CategoryProducts", function($http, Properties) {
 
-        // Toda funcionalidad que quieras exponer hacia
-        // afuera, tiene que estar publicada en this.
-        
-        // Obtenemos la colección de productos.
-        this.obtenerRecetas = function() {
-            return $http.get(Properties.urlServidor + Properties.endpointProduct + "/showProducts");
+        // Create a new Category.
+        // TO-DO
+        this.createCategory = function(category) {
+
+            return $http.post(Properties.urlServidor + Properties.endpointCategory +  "/" , category);
         };
 
-        // Obtenemos el producto que queremos buscar.
-        this.obtenerReceta = function(idReceta) {
-            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idReceta);
+
+        // Remove an existing Category.
+        this.deleteCategory = function(id) {
+            let categoryId = id;
+
+            return $http.delete(Properties.urlServidor + Properties.endpointCategory +  "/removeCategory/" + categoryId);
         };
 
-        // Obtenemos el producto que queremos buscar.
-        this.buscarProductos = function(datos) {
-            console.log("buscar Productos LOG", datos);
-            let name = datos.name;
-            let minprice = datos.name;
-            let maxprice = datos.name;
-            let dist = datos.name;
-            let cat1 = datos.name;
-            let cat2 = datos.name;
-            let cat3 = datos.name;
-            let criteria = "";
+        // Search one determinate category.
+        this.searchCategory = function(id) {
+            let categoryId = id;
 
-            if (typeof name !== 'undefined') {
-                criteria = criteria + "name=" + name;
-            }
-            
-
-            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/searchProduct?" + criteria );
+            return $http.get(Properties.urlServidor + Properties.endpointCategory +  "/" + categoryId);
         };
 
-        // Guardamos la receta.
-        this.guardarReceta = function(receta, imagen) {
+        // Show all Categories.
+        this.showCategories = function() {
 
-            var promesa;
-
-            // Si la imagen viene dada.
-            if (imagen) {
-
-                // Montamos un 'FormData' con la imagen.
-                var datos = new FormData();
-                datos.append("img", imagen);
-
-                // Configuramos el 'Content-Type' de la petición.
-                // Tenemos que indicarlo como 'undefined' para que
-                // AngularJS infiera el tipo de la petición.
-                var configuracion = {
-                    "headers": {
-                        "Content-Type": undefined
-                    }
-                };
-
-                // Subimos la imagen al servidor.
-                promesa = $http
-                    .post(
-                        Properties.urlServidor + Properties.endpointImages ,
-                        datos,
-                        configuracion
-                    )
-                    .then(function(respuesta) {
-
-                        // En la propiedad 'path' me viene dada
-                        // la ruta relativa de la imagen subida.
-                        var ruta = respuesta.data.path;
-
-                        // Establecemos la ruta de la imagen en
-                        // el objeto receta antes de guardarla.
-                        receta.rutaImagen = ruta;
-
-                        return $http.post(Properties.urlServidor + Properties.endpointProduct +  receta);
-                    });
-            }
-
-            // En caso de no haber indicado una imagen.
-            else {
-                promesa = $http.post(Properties.urlServidor + Properties.endpointProduct +  receta);
-            }
-
-            return promesa;
-        };
-
-        // Montamos la ruta absoluta a la imagen indicada.
-        this.obtenerRutaImagenAbsoluta = function(rutaRelativa) {
-
-            return rutaRelativa
-                ? (Properties.urlServidor  + "/" + rutaRelativa)
-                : undefined;
-        };
-
-        this.obtenerGeolocaliacon = function() {
-
-            // Preguntamos si la API está soportada.
-            if (navigator.geolocation) {
-
-                // Solicitamos la posición.
-                navigator.geolocation.getCurrentPosition(
-
-                    // En caso de obtener la posición.
-                    function(datos) {
-
-                        return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
-                    },
-
-                    // El usuario no autorizó la petición de posición.
-                    function() {
-                        alert("¡El usuario no autorizó!");
-                    }
-                );
-            }
-            // En caso de no estar soportada.
-            else {
-                alert("El navegador no soporta geolocalización");
-            }
+            return $http.get(Properties.urlServidor + Properties.endpointCategory +  "/showCategories");
         };
 
         

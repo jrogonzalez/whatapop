@@ -17,13 +17,14 @@ var readLine = require('readline');
 
 var db = require('../lib/connectMongoose');
 
+require('../models/Category');
 require('../models/Product');
 require('../models/User');
-require('../models/Category');
+
 
 var Product = mongoose.model('Product');
 var User = mongoose.model('User');
-var Pepe = mongoose.model('Pepe');
+var Category = mongoose.model('Category');
 
 var sha256 = require('sha256');
 
@@ -49,10 +50,10 @@ db.once('open', function() {
 function runInstallScript() {
 
     async.series([
-        //openDb,
         initProducts,
         initUsers,
         initCategories
+
         ], (err) => {
             if (err) {
                 console.error('Hubo un error: ', err);
@@ -118,9 +119,9 @@ function initProducts(cb){
                     user = data2[i].seller;
                     product.seller = user;
 
-                    var pepe = new Pepe();
-                    pepe = data2[i].category;
-                    product.category = pepe;
+                    var category = new Category();
+                    category = data2[i].category;
+                    product.category = category;
 
                     var errors = product.validateSync(); //This method is Sync
                     if (errors) {
@@ -134,7 +135,7 @@ function initProducts(cb){
                     });
                 }
                 console.log('\n *FINISHED PRODUCTS* ');
-                return cb(null, data2.length);
+                return cb(null, 0);
             });
           });
     }
@@ -204,7 +205,7 @@ function initUsers(cb){
                     });
                 }
                 console.log('\n *FINISHED USERS* ');
-                return cb(null, dataU.length);
+                return cb(null, 0);
             });
         });
 
@@ -212,10 +213,9 @@ function initUsers(cb){
     }
 }
 
-function initCategories(cb){
+function initCategories(){
 
     var file = path.join(__dirname, 'categories.json');
-    console.log(file);
 
     console.log('\n *STARTING CATEGORIES* ');
 
@@ -227,40 +227,38 @@ function initCategories(cb){
     else {
 
         // Drop the 'Pepe' collection from the current database
-        Pepe.remove({} , ()=> {
-            fs.readFile(file, 'utf-8', function (err, dataUser) {
+        Category.remove({} , ()=> {
+            fs.readFile(file, 'utf-8', function (err, dataCat) {
                 if (err) {
                     return console.log('Categories can not be created', err);
                 }
 
 
-                var dataU = JSON.parse(dataUser);
+                var dataU = JSON.parse(dataCat);
 
-
+                var lista = [];
                 for (var i = 0; i < dataU.length; i++) {
-                    var pepe = new Pepe();
-                    pepe.id = dataU[i].id;
-                    pepe.name = dataU[i].name;
+                    var category = new Category();
+                    category.id = dataU[i].id;
+                    category.name = dataU[i].name;
 
-                    var errors = pepe.validateSync(); //This method is Sync
+                    var errors = category.validateSync(); //This method is Sync
                     if (errors) {
                         console.log(errors);
                         return console.log('Errors in Category Model Validation', err);
                     }
-
-                    console.log(pepe);
-                    pepe.save( function(err) {
-
-                        if (err) {
-                            console.log("traza2");
-                            return cb(err);
-                            //return console.log('Category load error: ' + category.name + ' can not be created:' + err);
-                        }
-                        console.log("traza1");
-                    });
+                    lista.push(category);
                 }
-                console.log('\n *FINISHED CATEGORIES* ');
-                return cb(null);
+
+                Category.create(lista, function(err) {
+
+                    if (err) {
+                        return cb(err);
+                        //return console.log('Category load error: ' + category.name + ' can not be created:' + err);
+                    }
+                    console.log('\n *FINISHED CATEGORIES* ');
+                    return process.exit(0);
+                });
             });
 
         });
@@ -268,7 +266,6 @@ function initCategories(cb){
 
     }
 }
-
 
 // ******** INVOQUE INITIAL FUNCTION
 //openDb();

@@ -14,13 +14,17 @@ router.post('/createCategory', function(req, res, next) {
     Categories.createCategory(req, res, next);
 });
 
-router.delete('/removeCategory', jwtAuth(),function(req, res, next) {
+router.delete('/removeCategory/:id', function(req, res, next) {
     Categories.removeCategory(req, res, next);
 });
 
-router.get('/searchCategory' ,function(req, res, next) {
-    console.log("ha entrado");
+router.get('/:id' ,function(req, res, next) {
     Categories.searchCategory(req, res, next);
 });
+
+router.get('/showCategories' ,function(req, res, next) {
+    Categories.showCategories(req, res, next);
+});
+
 
 module.exports = router;

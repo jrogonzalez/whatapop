@@ -1,6 +1,3 @@
-/**
- * Created by iMac on 24/04/16.
- */
 'use strict';
 
 var mongoose = require('mongoose');
@@ -11,7 +8,7 @@ var categorySchema = mongoose.Schema({
     name: String
 });
 
-var Pepe = mongoose.model('Pepe', categorySchema);
+var Category = mongoose.model('Category', categorySchema);
 
 var operationsCategory = function() {
     return {
@@ -19,18 +16,18 @@ var operationsCategory = function() {
             let id = req.body.id;
             let name = req.body.name;
 
-            let pepe = new Pepe({
+            let category = new Category({
                 id: id,
                 name: name
             });
 
-            var errors = pepe.validateSync(); //Este metodo es sincrono
+            var errors = category.validateSync(); //Este metodo es sincrono
             if (errors) {
                 return Error('err006', req, res, 400);
 
             }
 
-            pepe.save(function(err) {
+            category.save(function(err) {
                 if (err) {
                     return Error('err007', req, res, 400);
 
@@ -42,13 +39,13 @@ var operationsCategory = function() {
             });
         },
         removeCategory: function(req, res) {
-            let name = req.body.name;
+            let id = req.query.id;
 
-            if (typeof name === 'undefined'){
+            if (typeof id === 'undefined'){
                 return Error('err020', req, res, 500);
             }
 
-            Pepe.remove({'name': name}).exec(function(err, result) {
+            Category.remove({'id': id}).exec(function(err, result) {
                 if (err) {
                     return Error('err002', req, res, 400);
                 } else {
@@ -57,21 +54,31 @@ var operationsCategory = function() {
             });
         },
         searchCategory: function (req, res) {
-            let name = req.query.name;
+            let id = req.query.id;
 
-            
-
-            if (typeof name == "undefined"){
+            if (typeof id == "undefined"){
                 return Error('err020', req, res, 500);
             }
 
 
-            Pepe.findOne({'name': name}).exec(function (err, result) {
+            Category.findOne({'id': id}).exec(function (err, result) {
                 if (err){
                     return Error('err002', req, res, 500);
                 }
 
                 res.json({success: true, category: result});
+
+            });
+
+        },
+        showCategories: function (req, res) {
+
+            Category.find().exec(function (err, result) {
+                if (err){
+                    return Error('err002', req, res, 500);
+                }
+
+                res.json({success: true, categories: result});
 
             });
 

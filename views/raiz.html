@@ -1,6 +1,6 @@
 <div class="container">
 
-    <!-- Cabecera de la aplicación -->
+    <!-- Head of the Application -->
     <div class="row">
         <div class="twelve columns">
             <header>
@@ -9,29 +9,27 @@
         </div>
     </div>
 
-    <!-- Barra de navegación -->
+    <!-- Nav Bar -->
     <div class="row">
         <div class="twelve columns">
             <nav class="barra-navegacion">
                 <ul>
                     <li>
-                        <!-- Con 'ngLink' establecemos el nombre de ruta a navegar -->
+                        <!-- 'ngLink' establish the route for linking -->
                         <a ng-link="['MyProducts']">SearchProducts</a>
                     </li>
-                    <li>
-                        <!-- Con 'ngLink' establecemos el nombre de ruta a navegar -->
+                   <!-- <li>
+                       TODO AddProducts
                         <a ng-link="['NewProduct']">Add Product</a>
                     </li>
+                    -->
                 </ul>
             </nav>
         </div>
     </div>
 
 
-
-
-
-    <!-- Zona dinámica -->
+    <!-- Dynamic Zone -->
     <ng-outlet></ng-outlet>
 
 </div>
