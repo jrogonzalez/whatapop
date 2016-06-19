@@ -36,20 +36,10 @@ angular
                     .searchProducts(datos)
                     .then(function(resultado) {
 
-                        //console.log("resultado: ", resultado.data);
-
-                        //Debemos buscar al seller para saber sus coordenadas
-                        UserService.searchUser(resultado.data.products[0].seller.id).then(function (result) {
-
-                            var coords = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
-
-                            ServiceProducts.obtenerGeolocalizacion(coords);
-                        });
-
-
-
+                        self.distance = ServiceProducts.obtenerGeolocalizacion(resultado.data.products[0].seller.id);
                         self.productList = resultado.data.products;
                         self.total = resultado.data.total;
+
 
                         // $router tiene los datos relacionados con la ruta
                         // que se está navegando. Puedo ejecutar su función

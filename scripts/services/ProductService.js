@@ -1,7 +1,7 @@
 
 angular
     .module("whatapop")
-    .service("ServiceProducts", function($http, Properties, $haversine, UserService) {
+    .service("ServiceProducts", function($http, Properties, $haversine, UserService, $q) {
 
         // Toda funcionalidad que quieras exponer hacia
         // afuera, tiene que estar publicada en this.
@@ -14,25 +14,7 @@ angular
         // Obtenemos el producto que queremos buscar.
         this.findProduct = function(idProduct) {
 
-            var results = $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idProduct);
-            console.log("RESULTS", results);
-            var distance;
-
-            /*
-            //Debemos buscar al seller para saber sus coordenadas
-            UserService.searchUser(respuesta.data.results.seller.id).then(function (result) {
-
-                var coords = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
-
-                distance = ServiceProducts.obtenerGeolocalizacion(coords);
-            });*/
-
-            var salida = {
-                "results": results,
-                "distance": distance
-            };
-
-            return results;
+            return $http.get(Properties.urlServidor + Properties.endpointProduct +  "/" + idProduct);;
         };
 
         // Obtenemos el producto que queremos buscar.
@@ -136,37 +118,48 @@ angular
                 : undefined;
         };
 
-        this.obtenerGeolocalizacion = function(coordenadas) {
+        this.obtenerGeolocalizacion = function(userId) {
 
-            console.log("latitud: "+ coordenadas.latitude + "longirud: " + coordenadas.longitude);
+            var deferred = $q.defer();
 
-            // Preguntamos si la API está soportada.
-            if (navigator.geolocation) {
+            //Debemos buscar al seller para saber sus coordenadas
+            UserService.searchUser(userId).then(function (result) {
 
-                // Solicitamos la posición.
-                navigator.geolocation.getCurrentPosition(
+                var coordenadas = {"latitude": result.data.result.latitude, "longitude": result.data.result.longitude};
+                
 
-                    // En caso de obtener la posición.
-                    function(datos) {
+                // Preguntamos si la API está soportada.
+                if (navigator.geolocation) {
 
-                        var distance = $haversine.distance(coordenadas, datos.coords);
-                        console.log("distance: ", distance);
+                    // Solicitamos la posición.
+                    navigator.geolocation.getCurrentPosition(
 
-                        return distance;
+                        // En caso de obtener la posición.
+                        function(datos) {
 
-                        //return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
-                    },
+                            var distance = $haversine.distance(coordenadas, datos.coords);
+                            console.log("distance: ", distance);
 
-                    // El usuario no autorizó la petición de posición.
-                    function() {
-                        alert("¡El usuario no autorizó!");
-                    }
-                );
-            }
-            // En caso de no estar soportada.
-            else {
-                alert("El navegador no soporta geolocalización");
-            }
+
+                            deferred.resolve({ "distance": distance });
+
+                            //return {"latitude": datos.coords.latitude, "longitude": datos.coords.longitude};
+                        },
+
+                        // El usuario no autorizó la petición de posición.
+                        function() {
+                            alert("¡El usuario no autorizó!");
+                        }
+                    );
+                }
+                // En caso de no estar soportada.
+                else {
+                    alert("El navegador no soporta geolocalización");
+                }
+
+            });
+
+            return deferred.promise;
         };
 
         

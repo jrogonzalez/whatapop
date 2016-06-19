@@ -1,7 +1,7 @@
 <div class="row">
     <!-- Enlace para volver a la vista anterior -->
     <div class="one column">
-        <a href="javascript:history.back();">Atrás</a>
+        <a href="javascript:history.back();">Back</a>
     </div>
 
 </div>
@@ -9,7 +9,11 @@
     <div class="twelve columns">
 
        <!-- Lista de recetas -->
-        <table class="u-full-width">
+
+        <div class="u-full-width" ng-hide="$ctrl.distance > 0">
+            Searching
+        </div>
+        <table class="u-full-width" ng-show="$ctrl.distance > 0">
             <tbody>
             <tr>
                 <td>
@@ -41,7 +45,7 @@
                     <div id="state">{{ ::$ctrl.productList.state }}</div>
 
                     <label for="distance">Distance</label>
-                    <div id="distance">{{ ::$ctrl.distance }}</div>
+                    <div id="distance">{{ $ctrl.distance | Distance }}</div>
 
                     <label for="seller-nick">Seller</label>
                     <div id="seller-nick">{{ ::$ctrl.productList.seller.nick }}</div>
@@ -51,6 +55,8 @@
                             ng-src="{{ ::$ctrl.obtenerRutaImagen($ctrl.productList.seller.avatar) }}"
                             width="50"
                             height="50">
+
+                    <mi-mapa></mi-mapa>
 
                 </td>
             </tr>

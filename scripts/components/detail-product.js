@@ -6,7 +6,7 @@ angular
         templateUrl: "views/detail-product.html",
 
         // En 'controller' establecemos la lógica del componente.
-        controller: function(ServiceProducts, UserService,$sce) {
+        controller: function(ServiceProducts, UserService,$sce, $q) {
 
             var self = this;
 
@@ -19,16 +19,20 @@ angular
 
                 self.$routerOnActivate = function (next) {
                     var id = next.params.id;
-                    
-                    // Como 'obtenerRecetas()' retorna una promesa, tengo que
-                    // pasar un manejador a su funcion 'then()'.
-                    ServiceProducts.findProduct(id).then(function (respuesta) {
-                        
-                        self.productList = respuesta.data.results;
-                        console.log("data", respuesta.data.results);
-                        //self.distance = ServiceProducts.obtenerGeolocalizacion(respuesta.data.results)
 
-                    });
+                        // Como 'obtenerRecetas()' retorna una promesa, tengo que
+                        // pasar un manejador a su funcion 'then()'.
+                        ServiceProducts.findProduct(id).then(function (respuesta) {
+
+                            ServiceProducts.obtenerGeolocalizacion(respuesta.data.results.seller.id).then(function (resp2) {
+                                console.log("DISTANCIA", resp2);
+                                self.distance = resp2.distance;
+                            });
+
+                            self.productList = respuesta.data.results;
+                            console.log("data", respuesta.data.results);
+                        })
+
                 };
             };
 
