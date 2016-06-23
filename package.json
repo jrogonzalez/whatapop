@@ -25,6 +25,7 @@
     "fbjs": "^0.8.3",
     "history": "^3.0.0",
     "i18n-2": "^0.6.3",
+    "jsonwebtoken": "^7.0.1",
     "lite-server": "^2.2.0",
     "mongoose-list": "^0.2.2",
     "mongoose-unique-validator": "^1.0.2",
